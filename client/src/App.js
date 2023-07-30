@@ -1,18 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.scss";
 import axios from "axios";
-import Home from "./components/Home/Home";
+import Home from "./pages/Home/Home";
 
-import Category from "./components/Category/Category";
-import SingleProduct from "./components/SingleProduct/SingleProduct";
+import AllProducts from "./pages/AllProducts/AllProducts";
+import SingleProduct from "./pages/SingleProduct/SingleProduct";
 
-import Login from "./components/Login/Login";
-import Register from "./components/Register/Register";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import AppContext from "./utils/context";
-import Contact from "./components/Contact/Contact";
+import Contact from "./pages/Contact/Contact";
 import Map from "./components/Map/Map";
+import Search from "./pages/Search/Search";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -32,16 +33,7 @@ function App() {
               </>
             }
           />
-          <Route
-            path="/category"
-            element={
-              <>
-                <Header />
-                <Category />
-                <Footer />
-              </>
-            }
-          />
+
           <Route
             path="/product/:id"
             element={
@@ -52,6 +44,18 @@ function App() {
               </>
             }
           />
+
+          <Route
+            path="/category"
+            element={
+              <>
+                <Header />
+                <AllProducts />
+                <Footer />
+              </>
+            }
+          />
+
           <Route
             path="/login"
             element={
@@ -79,6 +83,15 @@ function App() {
                 <Contact />
                 <Map />
                 <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <>
+                <Header />
+                <Search />
               </>
             }
           />

@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import cors from "cors";
 import nodemailer from "nodemailer";
-
+import uploadCloud from "./config/cloudinary.config.js";
 // import uploadCloud from "./config/cloudinary.config.js";
 const app = express();
 
@@ -64,6 +64,14 @@ app.post("/send-email", (req, res) => {
       res.send("Email sent successfully");
     }
   });
+});
+
+app.post("/upload", uploadCloud.single("photo"), (req, res, next) => {
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  res.json({ secure_url: req.file.path });
 });
 
 app.use(notFound);

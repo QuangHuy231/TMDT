@@ -3,15 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { TbSearch } from "react-icons/tb";
 import { CgShoppingCart } from "react-icons/cg";
 import "./Header.scss";
-import Search from "./Search/Search";
+
 import { Context } from "../../utils/context";
 import Cart from "../Cart/Cart";
 import logo from "../../assets/logo.png";
+import { AiOutlineLogout } from "react-icons/ai";
+import axios from "axios";
+import { SearchResultsList } from "./Search/SearchResultsList";
 
 const Header = () => {
-  const { user } = useContext(Context);
+  const { user, fetchSearch } = useContext(Context);
   const [scrolled, setScrolled] = useState(false);
-  const [searchModal, setSearchModal] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [showList, setShowList] = useState(false);
   const navigate = useNavigate();
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -27,6 +32,21 @@ const Header = () => {
   }, []);
 
   const { cartCount, showCart, setShowCart } = useContext(Context);
+
+  const handleLogout = async () => {
+    await axios.post("/auth/logout");
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
+  const handleChange = (value) => {
+    setSearch(value);
+    fetchSearch(value);
+  };
+
+  const handleShowList = () => {
+    setShowList(!showList);
+  };
 
   return (
     <>
@@ -47,8 +67,15 @@ const Header = () => {
                 type="text"
                 placeholder="Search"
                 className="search-input"
+                value={search}
+                onFocus={handleShowList}
+                onChange={(e) => handleChange(e.target.value)}
               />
-              <TbSearch onClick={() => setSearchModal(true)} />
+              {showList && (
+                <SearchResultsList handleShowList={handleShowList} />
+              )}
+
+              <TbSearch />
             </div>
 
             <span className="cart-icon" onClick={() => setShowCart(true)}>
@@ -56,9 +83,12 @@ const Header = () => {
               {!!cartCount && <span>{cartCount}</span>}
             </span>
             {user ? (
-              <Link to={"/profile"} className="user-avatar">
-                <img src={logo} alt="" />
-              </Link>
+              <div className="user-wrapper">
+                <Link to={"/profile"} className="user">
+                  {user.data.full_name}
+                </Link>
+                <AiOutlineLogout onClick={handleLogout} />
+              </div>
             ) : (
               <Link to="/login" className="button-login">
                 Login
@@ -67,7 +97,6 @@ const Header = () => {
           </div>
         </div>
       </header>
-      {searchModal && <Search setSearchModal={setSearchModal} />}
       {showCart && <Cart />}
     </>
   );

@@ -17,7 +17,8 @@ export const createReview = asyncHandler(async (req, res) => {
 
 export const getReviewsOfProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const q = "SELECT * FROM reviews WHERE product_id = ?";
+  const q =
+    "SELECT reviews.*, users.* FROM reviews INNER JOIN users ON reviews.user_id = users.user_id WHERE product_id = ?";
   db.query(q, [id], (err, data) => {
     if (err) return res.json(err);
     return res.status(200).json(data);

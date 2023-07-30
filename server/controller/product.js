@@ -36,7 +36,7 @@ export const createProduct = asyncHandler(async (req, res) => {
       });
     });
   } else {
-    new_price = null;
+    new_price = old_price;
     const q =
       "INSERT INTO products(`product_name`, `old_price`, `description`, `image_url`, `category_id` , `promotion_id`, `new_price`) VALUES (?)";
     const values = [
@@ -57,7 +57,8 @@ export const createProduct = asyncHandler(async (req, res) => {
 });
 
 export const getProducts = asyncHandler((req, res) => {
-  const q = "SELECT * FROM products ORDER BY create_date DESC";
+  const q =
+    "SELECT products.* , categories.* FROM products INNER JOIN categories ON products.category_id = categories.category_id ORDER BY create_date DESC";
   db.query(q, (err, data) => {
     if (err) return res.json(err);
     return res.status(200).json(data);
@@ -110,6 +111,15 @@ export const getRelatedProducts = asyncHandler((req, res) => {
   const q =
     "SELECT * FROM products WHERE category_id = ? AND product_id != ? ORDER BY create_date DESC  LIMIT 4 ";
   db.query(q, [req.params.category_id, req.params.id], (err, data) => {
+    if (err) return res.json(err);
+    return res.status(200).json(data);
+  });
+});
+
+export const search = asyncHandler((req, res) => {
+  const q =
+    "SELECT products.*, categories.* FROM products INNER JOIN categories ON products.category_id = categories.category_id WHERE product_name LIKE ? OR categories.category_name LIKE ? ORDER BY create_date DESC";
+  db.query(q, [`%${req.body.search}%`, `%${req.body.search}%`], (err, data) => {
     if (err) return res.json(err);
     return res.status(200).json(data);
   });

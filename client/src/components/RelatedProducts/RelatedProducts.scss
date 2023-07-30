@@ -35,6 +35,7 @@
   .see-more {
     margin-top: 20px;
     align-self: center;
+    text-decoration: none;
     text-transform: uppercase;
     font-weight: 500;
     width: fit-content;
@@ -46,13 +47,7 @@
     &:hover {
       opacity: 0.6;
       background-color: black;
-      .see-more-text {
-        color: white;
-      }
-    }
-    .see-more-text {
-      text-decoration: none;
-      color: black;
+      color: white;
     }
   }
 }

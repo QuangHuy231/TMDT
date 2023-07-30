@@ -1,8 +1,12 @@
 import "./Products.scss";
-import Product from "./Product/Product";
+import Product from "../Product/Product";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "../../utils/context";
 
-const Products = ({ products }) => {
+const Products = () => {
+  const { products, setFilterCategories, setMinPrice, setMaxPrice } =
+    useContext(Context);
   return (
     <>
       {products.length > 0 ? (
@@ -16,7 +20,20 @@ const Products = ({ products }) => {
               />
             ))}
           </div>
-          {products.length > 8 && <Link className="see-more ">See more</Link>}
+          {products.length > 8 && (
+            <div
+              className="see-more"
+              onClick={() => {
+                setFilterCategories("All");
+                setMaxPrice("");
+                setMinPrice("");
+              }}
+            >
+              <Link to={"/category"} className="see-more-text">
+                See more
+              </Link>
+            </div>
+          )}
         </div>
       ) : (
         <div>
