@@ -11,10 +11,17 @@ const AppContext = ({ children }) => {
   );
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+
   const [showCart, setShowCart] = useState(false);
+
   const [cartItems, setCartItems] = useState([]);
-  const [cartCount, setCartCount] = useState(0);
-  const [cartSubTotal, setCartSubTotal] = useState(0);
+
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const [totalQuantities, setTotalQuantities] = useState(0);
+  const [qty, setQty] = useState(1);
+  let foundProduct;
+  let index;
 
   const [filterCategories, setFilterCategories] = useState(["All"]);
   const [filterProducts, setFilterProducts] = useState([]);
@@ -102,48 +109,82 @@ const AppContext = ({ children }) => {
     });
   }, []);
 
-  useEffect(() => {
-    let count = 0;
-    cartItems?.map((item) => (count += item.attributes.quantity));
-    setCartCount(count);
-
-    let subTotal = 0;
-    cartItems.map(
-      (item) => (subTotal += item.attributes.price * item.attributes.quantity)
+  const onAdd = (product, quantity) => {
+    const checkProductInCart = cartItems.find(
+      (item) => item.product_id === product.product_id
     );
-    setCartSubTotal(subTotal);
-  }, [cartItems]);
-
-  const handleAddToCart = (product, quantity) => {
-    let items = [...cartItems];
-    let index = items?.findIndex((p) => p.id === product?.id);
-    if (index !== -1) {
-      items[index].attributes.quantity += quantity;
+    setTotalPrice(
+      (prevTotalPrice) => prevTotalPrice + product.old_price * quantity
+    );
+    setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + quantity);
+    if (checkProductInCart) {
+      const updatedCartItems = cartItems.map((cartProduct) => {
+        if (cartProduct.product_id === product.product_id)
+          return {
+            ...cartProduct,
+            quantity: cartProduct.quantity + quantity,
+          };
+      });
+      setCartItems(updatedCartItems);
     } else {
-      product.attributes.quantity = quantity;
-      items = [...items, product];
+      product.quantity = quantity;
+      setCartItems([...cartItems, { ...product }]);
     }
-    setCartItems(items);
+    console.log(`${qty} ${product.product_name} add to the cart`);
+  };
+  const onRemove = (product) => {
+    foundProduct = foundProduct = cartItems.find(
+      (item) => item.product_id === product.product_id
+    );
+    const newCartItems = cartItems.filter(
+      (item) => item.product_id !== product.product_id
+    );
+    setTotalPrice(
+      (prevTotalPrice) =>
+        prevTotalPrice - foundProduct.old_price * foundProduct.quantity
+    );
+    setTotalQuantities(
+      (prevTotalQuantities) => prevTotalQuantities - foundProduct.quantity
+    );
+    setCartItems(newCartItems);
   };
 
-  const handleRemoveFromCart = (product) => {
-    let items = [...cartItems];
-    items = items?.filter((p) => p.id !== product?.id);
-    setCartItems(items);
-  };
-
-  const handleCartProductQuantity = (type, product) => {
-    let items = [...cartItems];
-    let index = items?.findIndex((p) => p.id === product?.id);
-    if (type === "inc") {
-      items[index].attributes.quantity += 1;
-    } else if (type === "dec") {
-      if (items[index].attributes.quantity === 1) return;
-      items[index].attributes.quantity -= 1;
+  const toggleCartItemQuantity = (id, value) => {
+    foundProduct = cartItems.find((item) => item.product_id === id);
+    index = cartItems.findIndex((product) => product.product_id === id);
+    const newCartItems = cartItems.filter((item) => item.product_id !== id);
+    if (value === "inc") {
+      setCartItems([
+        ...newCartItems,
+        { ...foundProduct, quantity: foundProduct.quantity + 1 },
+      ]);
+      setTotalPrice(
+        (prevTotalPrice) => prevTotalPrice + foundProduct.old_price
+      );
+      setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + 1);
+    } else if (value === "dec") {
+      if (foundProduct.quantity > 1) {
+        setCartItems([
+          ...newCartItems,
+          { ...foundProduct, quantity: foundProduct.quantity - 1 },
+        ]);
+        setTotalPrice(
+          (prevTotalPrice) => prevTotalPrice - foundProduct.old_price
+        );
+        setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - 1);
+      }
     }
-    setCartItems(items);
   };
 
+  const incQty = () => {
+    setQty((prevQty) => prevQty + 1);
+  };
+  const decQty = () => {
+    setQty((prevQty) => {
+      if (prevQty - 1 < 1) return 1;
+      return prevQty - 1;
+    });
+  };
   return (
     <Context.Provider
       value={{
@@ -151,15 +192,19 @@ const AppContext = ({ children }) => {
         setProducts,
         categories,
         setCategories,
-        cartItems,
-        setCartItems,
-        handleAddToCart,
-        cartCount,
-        handleRemoveFromCart,
+
         showCart,
         setShowCart,
-        handleCartProductQuantity,
-        cartSubTotal,
+        cartItems,
+        totalPrice,
+        totalQuantities,
+        qty,
+        incQty,
+        decQty,
+        onAdd,
+        toggleCartItemQuantity,
+        onRemove,
+
         user,
         setUser,
         handleMaxPriceChange,

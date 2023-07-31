@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { AiOutlineStar } from "react-icons/ai";
 import "./Review.scss";
 import { Context } from "../../utils/context";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/image-removebg-preview.png";
+import Rating from "../Rating/Rating";
+import { FaStar } from "react-icons/fa";
+import { BsFillTrash3Fill } from "react-icons/bs";
 
 const Review = ({ productId }) => {
   const { user } = useContext(Context);
@@ -31,14 +33,35 @@ const Review = ({ productId }) => {
         axios
           .post(`/review/create-review`, {
             product_id: productId,
+            rating,
             review_text: review,
           })
           .then(() => {
             fetchReviews();
             setReview("");
+            setRating(0);
           });
       }
     }
+  };
+
+  const removeReview = (id) => {
+    axios.delete(`/review/delete-review/${id}`).then(() => {
+      fetchReviews();
+    });
+  };
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        i < rating ? (
+          <FaStar size={30} color={"#ffc107"} />
+        ) : (
+          <FaStar size={30} color={"#e4e5e9"} />
+        )
+      );
+    }
+    return stars;
   };
 
   return (
@@ -46,15 +69,12 @@ const Review = ({ productId }) => {
       <div className="input-review">
         <p>Score</p>
         <div className="score">
-          <AiOutlineStar className="star" />
-          <AiOutlineStar className="star" />
-          <AiOutlineStar className="star" />
-          <AiOutlineStar className="star" />
-          <AiOutlineStar className="star" />
+          <Rating setRating={setRating} rating={rating} />
         </div>
         <textarea
           type="text"
           placeholder="Write a review"
+          value={review}
           onChange={(e) => setReview(e.target.value)}
         />
         <button onClick={addReview}>Comment</button>
@@ -72,13 +92,19 @@ const Review = ({ productId }) => {
                     <p>{review.full_name}</p>
                   </div>
                   <div className="score">
-                    <AiOutlineStar className="star" />
-                    <AiOutlineStar className="star" />
-                    <AiOutlineStar className="star" />
-                    <AiOutlineStar className="star" />
-                    <AiOutlineStar className="star" />
+                    {renderStars(review.rating).map((star, index) => (
+                      <span key={index}>{star}</span>
+                    ))}
                   </div>
+                  {review?.user_id === user?.data.user_id && (
+                    <BsFillTrash3Fill
+                      size={20}
+                      className="delete"
+                      onClick={() => removeReview(review.review_id)}
+                    />
+                  )}
                 </div>
+
                 <p className="review-text">{review.review_text}</p>
               </div>
             ))}

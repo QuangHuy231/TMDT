@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./App.scss";
 import axios from "axios";
 import Home from "./pages/Home/Home";
 

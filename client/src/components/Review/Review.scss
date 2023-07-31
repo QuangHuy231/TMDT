@@ -71,6 +71,7 @@
         .info-user {
           display: flex;
           align-items: center;
+          gap: 40px;
           .user-review {
             display: flex;
             align-items: center;
@@ -94,11 +95,15 @@
               font-size: 30px;
             }
           }
+          .delete {
+            cursor: pointer;
+          }
         }
         .time {
           font-size: 14px;
           color: #8e2de2;
         }
+
         .review-text {
           font-size: 20px;
           margin-left: 70px;

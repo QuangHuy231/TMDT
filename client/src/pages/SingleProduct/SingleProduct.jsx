@@ -10,12 +10,11 @@ import Review from "../../components/Review/Review";
 import { Context } from "../../utils/context";
 
 const SingleProduct = () => {
-  const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [relatedProducts, setRelatedProducts] = useState([]);
 
-  const { handleAddToCart } = useContext(Context);
+  const { onAdd, decQty, incQty, qty } = useContext(Context);
   useEffect(() => {
     axios.get(`/product/get-detail-product/${id}`).then((res) => {
       setProduct(res.data[0]);
@@ -29,16 +28,6 @@ const SingleProduct = () => {
         setRelatedProducts(res.data);
       });
   }, [id, product.category_id]);
-
-  const decrement = () => {
-    setQuantity((prevState) => {
-      if (prevState === 1) return 1;
-      return prevState - 1;
-    });
-  };
-  const increment = () => {
-    setQuantity((prevState) => prevState + 1);
-  };
 
   return (
     <div className="single-product-main-content">
@@ -63,16 +52,15 @@ const SingleProduct = () => {
 
             <div className="cart-buttons">
               <div className="quantity-buttons">
-                <span onClick={decrement}>-</span>
-                <span>{quantity}</span>
-                <span onClick={increment}>+</span>
+                <span onClick={decQty}>-</span>
+                <span>{qty}</span>
+                <span onClick={incQty}>+</span>
               </div>
               <button
                 className="add-to-cart-button"
-                // onClick={() => {
-                //   handleAddToCart(data?.data?.[0], quantity);
-                //   setQuantity(1);
-                // }}
+                onClick={() => {
+                  onAdd(product, qty);
+                }}
               >
                 <FaCartPlus size={20} />
                 ADD TO CART
@@ -80,13 +68,6 @@ const SingleProduct = () => {
             </div>
 
             <span className="divider" />
-            {/* <div className="info-item">
-              <span className="text-bold">
-                Category:{" "}
-                <span>{product.categories.data[0].attributes.title}</span>
-              </span>
-
-            </div> */}
           </div>
         </div>
         <div className="sec-heading">Reviews</div>

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Product.scss";
 import { Link } from "react-router-dom";
+import { Context } from "../../utils/context";
 const Product = ({ product, id }) => {
   const { image_url, product_name, old_price, new_price } = product;
+  const { onAdd } = useContext(Context);
   return (
     <div className="product-card">
       <Link className="thumbnail" to={`/product/${id}`}>
@@ -21,7 +23,9 @@ const Product = ({ product, id }) => {
               <span className="price">&#36;{old_price}</span>
             </div>
           )}
-          <button className="add-to-cart">Add to cart</button>
+          <button className="add-to-cart" onClick={() => onAdd(product, 1)}>
+            Add to cart
+          </button>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
   }, []);
 
-  const { cartCount, showCart, setShowCart } = useContext(Context);
+  const { totalQuantities, showCart, setShowCart } = useContext(Context);
 
   const handleLogout = async () => {
     await axios.post("/auth/logout");
@@ -80,7 +80,7 @@ const Header = () => {
 
             <span className="cart-icon" onClick={() => setShowCart(true)}>
               <CgShoppingCart />
-              {!!cartCount && <span>{cartCount}</span>}
+              {!!totalQuantities && <span>{totalQuantities}</span>}
             </span>
             {user ? (
               <div className="user-wrapper">
