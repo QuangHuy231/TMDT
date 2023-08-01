@@ -12,7 +12,7 @@ import axios from "axios";
 import { SearchResultsList } from "./Search/SearchResultsList";
 
 const Header = () => {
-  const { user, fetchSearch } = useContext(Context);
+  const { user, fetchSearch, setUser } = useContext(Context);
   const [scrolled, setScrolled] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -36,7 +36,7 @@ const Header = () => {
   const handleLogout = async () => {
     await axios.post("/auth/logout");
     localStorage.removeItem("user");
-    window.location.reload();
+    setUser(null);
   };
 
   const handleChange = (value) => {
@@ -84,7 +84,7 @@ const Header = () => {
             </span>
             {user ? (
               <div className="user-wrapper">
-                <Link to={"/profile"} className="user">
+                <Link to={`/profile/${user.data.user_id}`} className="user">
                   {user.data.full_name}
                 </Link>
                 <AiOutlineLogout onClick={handleLogout} />

@@ -18,8 +18,9 @@ const Login = () => {
         email,
         password,
       });
-      setUser(data);
+
       localStorage.setItem("user", JSON.stringify(data));
+      setUser(JSON.parse(localStorage.getItem("user")));
       alert("Login successfully");
       navigate("/");
     } catch (error) {

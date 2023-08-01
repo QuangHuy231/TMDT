@@ -13,6 +13,8 @@ import AppContext from "./utils/context";
 import Contact from "./pages/Contact/Contact";
 import Map from "./components/Map/Map";
 import Search from "./pages/Search/Search";
+import Profile from "./pages/Profile/Profile";
+import EditProfile from "./pages/EditProfile/EditProfile";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -91,6 +93,24 @@ function App() {
               <>
                 <Header />
                 <Search />
+              </>
+            }
+          />
+          <Route
+            path="/profile/:id"
+            element={
+              <>
+                <Header />
+                <Profile />
+              </>
+            }
+          />
+          <Route
+            path="/edit-profile/:id"
+            element={
+              <>
+                <Header />
+                <EditProfile />
               </>
             }
           />

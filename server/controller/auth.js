@@ -70,3 +70,14 @@ export const logout = asyncHandler((req, res) => {
     .status(200)
     .json("User has been logged out");
 });
+
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { user_id } = req.user;
+  const { email, full_name, phone, address } = req.body;
+  const q =
+    "UPDATE users SET `email` = ?, `full_name` = ?, `phone` = ?, `address` = ? WHERE user_id = ?";
+  db.query(q, [email, full_name, phone, address, user_id], (err, data) => {
+    if (err) return res.json(err);
+    return res.status(200).json("Profile has been updated");
+  });
+});
