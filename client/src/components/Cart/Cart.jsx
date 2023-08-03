@@ -10,6 +10,7 @@ import { TiDeleteOutline } from "react-icons/ti";
 import "./Cart.scss";
 
 import { Context } from "../../utils/context";
+import axios from "axios";
 const Cart = () => {
   const cartRef = useRef();
   const {
@@ -17,17 +18,19 @@ const Cart = () => {
     totalPrice,
     totalQuantities,
     cartItems,
+
     setShowCart,
     toggleCartItemQuantity,
     onRemove,
   } = useContext(Context);
+  console.log(cartItems);
   const navigate = useNavigate();
   const handlePay = () => {
     setShowCart(false);
     if (!user) {
       navigate("/login");
     } else {
-      console.log("payed");
+      navigate("/order");
     }
   };
   return (
@@ -60,12 +63,12 @@ const Cart = () => {
         <div className="product-container">
           {cartItems.length >= 1 &&
             cartItems.map((item) => (
-              <div className="product" key={item.product_id}>
-                <img src={item.image_url} className="cart-product-image" />
+              <div className="product" key={item?.product_id}>
+                <img src={item?.image_url} className="cart-product-image" />
                 <div className="item-desc">
                   <div className="flex top">
-                    <h5>{item.product_name}</h5>
-                    <h4>${item.old_price}</h4>
+                    <h5>{item?.product_name}</h5>
+                    <h4>${item?.new_price}</h4>
                   </div>
                   <div className="flex bottom">
                     <div>
@@ -109,7 +112,7 @@ const Cart = () => {
             </div>
             <div className="btn-container">
               <button className="btn" type="button" onClick={handlePay}>
-                Pay with Stripe
+                ORDER
               </button>
             </div>
           </div>

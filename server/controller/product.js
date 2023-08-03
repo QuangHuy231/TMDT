@@ -38,14 +38,13 @@ export const createProduct = asyncHandler(async (req, res) => {
   } else {
     new_price = old_price;
     const q =
-      "INSERT INTO products(`product_name`, `old_price`, `description`, `image_url`, `category_id` , `promotion_id`, `new_price`) VALUES (?)";
+      "INSERT INTO products(`product_name`, `old_price`, `description`, `image_url`, `category_id` , `new_price`) VALUES (?)";
     const values = [
       product_name,
       old_price,
       description,
       image_url,
       category_id,
-      promotion_id,
       new_price,
     ];
 
@@ -58,7 +57,7 @@ export const createProduct = asyncHandler(async (req, res) => {
 
 export const getProducts = asyncHandler((req, res) => {
   const q =
-    "SELECT products.* , categories.* FROM products INNER JOIN categories ON products.category_id = categories.category_id ORDER BY create_date DESC";
+    "SELECT products.* , categories.* , promotions.*, COUNT(reviews.product_id) AS total_reviews , AVG(reviews.rating) AS average_rating FROM products INNER JOIN categories ON products.category_id = categories.category_id LEFT JOIN promotions ON products.promotion_id = promotions.promotion_id LEFT JOIN reviews ON products.product_id = reviews.product_id GROUP BY products.product_id ORDER BY create_date DESC";
   db.query(q, (err, data) => {
     if (err) return res.json(err);
     return res.status(200).json(data);

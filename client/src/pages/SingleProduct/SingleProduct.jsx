@@ -39,13 +39,13 @@ const SingleProduct = () => {
           <div className="right">
             <span className="name">{product.product_name}</span>
 
-            {product.new_price ? (
+            {product.new_price === product.old_price ? (
+              <span className="price">&#36;{product.old_price}</span>
+            ) : (
               <div className="price-wrapper">
                 <span className="old-price">&#36;{product.old_price}</span>
                 <span className="new-price">&#36;{product.new_price}</span>
               </div>
-            ) : (
-              <span className="price">&#36;{product.old_price}</span>
             )}
 
             <span className="desc">{product.description}</span>

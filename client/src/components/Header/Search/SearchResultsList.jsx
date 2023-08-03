@@ -25,14 +25,14 @@ export const SearchResultsList = ({ handleShowList }) => {
           <img src={result.image_url} alt="" />
           <div className="info-product">
             <span className="name">{result.product_name}</span>
-            {result.new_price ? (
+            {result.new_price === result.old_price ? (
               <div className="price-wrapper">
-                <span className="old-price">&#36;{result.old_price}</span>
-                <span className="price">&#36;{result.new_price}</span>
+                <span className="price">&#36;{result.old_price}</span>
               </div>
             ) : (
               <div className="price-wrapper">
-                <span className="price">&#36;{result.old_price}</span>
+                <span className="old-price">&#36;{result.old_price}</span>
+                <span className="price">&#36;{result.new_price}</span>
               </div>
             )}
           </div>

@@ -53,7 +53,7 @@ const AppContext = ({ children }) => {
         if (minPrice === "" && maxPrice === "") {
           return true; // Nếu không có minPrice và maxPrice thì giữ lại tất cả sản phẩm
         } else {
-          const price = product.old_price;
+          const price = product.new_price;
           const min = parseInt(minPrice);
           const max = parseInt(maxPrice);
           return (
@@ -114,7 +114,7 @@ const AppContext = ({ children }) => {
       (item) => item.product_id === product.product_id
     );
     setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice + product.old_price * quantity
+      (prevTotalPrice) => prevTotalPrice + product.new_price * quantity
     );
     setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + quantity);
     if (checkProductInCart) {
@@ -130,7 +130,6 @@ const AppContext = ({ children }) => {
       product.quantity = quantity;
       setCartItems([...cartItems, { ...product }]);
     }
-    console.log(`${qty} ${product.product_name} add to the cart`);
   };
   const onRemove = (product) => {
     foundProduct = foundProduct = cartItems.find(
@@ -141,7 +140,7 @@ const AppContext = ({ children }) => {
     );
     setTotalPrice(
       (prevTotalPrice) =>
-        prevTotalPrice - foundProduct.old_price * foundProduct.quantity
+        prevTotalPrice - foundProduct.new_price * foundProduct.quantity
     );
     setTotalQuantities(
       (prevTotalQuantities) => prevTotalQuantities - foundProduct.quantity
@@ -159,7 +158,7 @@ const AppContext = ({ children }) => {
         { ...foundProduct, quantity: foundProduct.quantity + 1 },
       ]);
       setTotalPrice(
-        (prevTotalPrice) => prevTotalPrice + foundProduct.old_price
+        (prevTotalPrice) => prevTotalPrice + foundProduct.new_price
       );
       setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + 1);
     } else if (value === "dec") {
@@ -169,7 +168,7 @@ const AppContext = ({ children }) => {
           { ...foundProduct, quantity: foundProduct.quantity - 1 },
         ]);
         setTotalPrice(
-          (prevTotalPrice) => prevTotalPrice - foundProduct.old_price
+          (prevTotalPrice) => prevTotalPrice - foundProduct.new_price
         );
         setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - 1);
       }
@@ -196,6 +195,7 @@ const AppContext = ({ children }) => {
         showCart,
         setShowCart,
         cartItems,
+        setCartItems,
         totalPrice,
         totalQuantities,
         qty,

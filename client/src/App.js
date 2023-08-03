@@ -15,6 +15,7 @@ import Map from "./components/Map/Map";
 import Search from "./pages/Search/Search";
 import Profile from "./pages/Profile/Profile";
 import EditProfile from "./pages/EditProfile/EditProfile";
+import OrderPage from "./pages/OrderPage/OrderPage";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -111,6 +112,15 @@ function App() {
               <>
                 <Header />
                 <EditProfile />
+              </>
+            }
+          />
+          <Route
+            path="/order"
+            element={
+              <>
+                <Header />
+                <OrderPage />
               </>
             }
           />

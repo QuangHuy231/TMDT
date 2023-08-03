@@ -4,6 +4,7 @@ import categoryRouter from "./routes/categoryRoute.js";
 import productRouter from "./routes/productRoute.js";
 import promotionRouter from "./routes/promotionRoute.js";
 import reviewRouter from "./routes/reviewRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
@@ -15,7 +16,12 @@ const app = express();
 
 dotenv.config();
 // const __filename = fileURLToPath(import.meta.url);
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 
@@ -33,6 +39,7 @@ app.use("/category", categoryRouter);
 app.use("/product", productRouter);
 app.use("/promotion", promotionRouter);
 app.use("/review", reviewRouter);
+app.use("/order", orderRouter);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

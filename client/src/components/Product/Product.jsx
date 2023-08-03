@@ -13,14 +13,14 @@ const Product = ({ product, id }) => {
       <div className="prod-details">
         <span className="name">{product_name}</span>
         <div className="price-button">
-          {new_price ? (
+          {new_price === old_price ? (
             <div className="price-wrapper">
-              <span className="old-price">&#36;{old_price} </span>
-              <span className="price">&#36;{new_price}</span>
+              <span className="price">&#36;{old_price}</span>
             </div>
           ) : (
             <div className="price-wrapper">
-              <span className="price">&#36;{old_price}</span>
+              <span className="old-price">&#36;{old_price} </span>
+              <span className="price">&#36;{new_price}</span>
             </div>
           )}
           <button className="add-to-cart" onClick={() => onAdd(product, 1)}>

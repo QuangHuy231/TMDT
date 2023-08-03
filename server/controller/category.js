@@ -4,8 +4,9 @@ import asyncHandler from "express-async-handler";
 
 // Category
 export const createCategory = asyncHandler((req, res) => {
-  const q = "INSERT INTO categories(`name`, `img_category`) VALUES (?)";
-  const values = [req.body.name, req.body.img_category];
+  const q =
+    "INSERT INTO categories(`category_name`, `img_category`) VALUES (?)";
+  const values = [req.body.category_name, req.body.img_category];
   db.query(q, [values], (err, data) => {
     if (err) return res.json(err);
     return res.status(200).json("Category has been created");
@@ -13,7 +14,8 @@ export const createCategory = asyncHandler((req, res) => {
 });
 
 export const getCategories = asyncHandler((req, res) => {
-  const q = "SELECT * FROM categories";
+  const q =
+    "SELECT categories.*, COUNT(products.product_id) As total_products FROM categories LEFT JOIN products ON categories.category_id = products.category_id GROUP BY category_id ";
   db.query(q, (err, data) => {
     if (err) return res.json(err);
     return res.status(200).json(data);
