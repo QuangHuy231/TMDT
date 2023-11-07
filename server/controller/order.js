@@ -46,3 +46,12 @@ export const deleteOrder = asyncHandler(async (req, res) => {
     return res.status(200).json("Order has been deleted");
   });
 });
+
+export const statistical = asyncHandler(async (req, res) => {
+  const q =
+    "SELECT DATE_FORMAT(order_date, '%Y-%m') AS month, SUM(total_price) AS total_revenue FROM orders GROUP BY DATE_FORMAT(order_date, '%Y-%m')";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.status(200).json(data);
+  });
+});
